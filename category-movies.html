@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Movies by Category</title>
+    <style>
+        * {
+            margin: 0;   
+            padding: 0;  
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: #4b006e;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); 
+            color: white;
+            flex-shrink: 0;
+        }
+
+        header a.back-link {
+            color: #d7c2e6;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+        header a.back-link:hover {
+            text-decoration: underline;
+            color: #b347ff;
+        }
+
+        #category-title {
+            color: #d7c2e6;
+            font-size: 2rem;
+            margin-top: 0;
+        }
+
+        main {
+            flex-grow: 1;
+            max-width: 1200px;
+            margin: 20px auto;
+            width: 100%;
+        }
+
+        .movie-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(179, 71, 255, 0.5);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            color: white;
+        }
+        .movie-card:hover {
+            transform: translateY(-10px);
+        }
+        .movie-poster {
+            width: 100%;
+            height: 270px;
+            object-fit: cover;
+            border-radius: 6px;
+            user-select: none;
+        }
+        .movie-title {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        .movie-rating {
+            margin-top: 5px;
+            color: #d7c2e6;
+            font-weight: 600;
+        }
+        .watchlist-btn {
+            margin-top: 10px;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #4b006e;
+            color: #fff;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            user-select: none;
+        }
+        .watchlist-btn:hover {
+            background-color: #7510d9;
+        }
+
+        footer {
+            background-color: #1a1a1a;
+            text-align: center;
+            padding: 20px;
+            margin-top: auto;
+            color: #bfbfbf;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="kategoriler.html" class="back-link">&larr; Back to Categories</a>
+    <h1 id="category-title">Category: Loading...</h1>
+</header>
+
+<main>
+    <div class="movie-list" id="movie-list">
+        <!-- Filmler buraya gelecek -->
+    </div>
+</main>
+
+<footer>
+    <p>© 2025 MoviePortal. All rights reserved.</p>
+</footer>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const API_KEY = '7af5df540315033fef1763555218c8b9';
+
+    const genreNameToId = {
+        "Action": 28,
+        "Romance": 10749,
+        "Fantasy": 14,
+        "Science Fiction": 878,
+        "Comedy": 35,
+        "Musical": 10402,
+        "Drama": 18,
+        "Animation": 16,
+        "Horror": 27,
+        "Superhero": 28,
+        "Family": 10751,
+        "War": 10752
+    };
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+
+    const categoryTitleEl = document.getElementById('category-title');
+    const movieListEl = document.getElementById('movie-list');
+
+    if (!category || !(category in genreNameToId)) {
+        categoryTitleEl.textContent = 'Invalid category.';
+        return;
+    }
+
+    categoryTitleEl.textContent = `Category: ${category}`;
+
+    const genreId = genreNameToId[category];
+    const url = `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genreId}&language=en-US&page=1`;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            showMovies(data.results.slice(0, 12));
+        })
+        .catch(error => {
+            console.error('Failed to fetch movie data:', error);
+            categoryTitleEl.textContent = 'Failed to load movie data.';
+        });
+
+    function getWatchlist() {
+        const list = localStorage.getItem('watchlist');
+        if (!list) return [];
+        try {
+            return JSON.parse(list);
+        } catch {
+            return [];
+        }
+    }
+
+    function setWatchlist(list) {
+        localStorage.setItem('watchlist', JSON.stringify(list));
+    }
+function getWatchlist() {
+    const list = localStorage.getItem('watchlist');
+    if (!list) return [];
+    try {
+        return JSON.parse(list);
+    } catch {
+        return [];
+    }
+}
+
+function setWatchlist(list) {
+    localStorage.setItem('watchlist', JSON.stringify(list));
+}
+
+function showMovies(movies) {
+    movieListEl.innerHTML = '';
+
+    movies.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'movie-card';
+
+        const poster = document.createElement('img');
+        poster.className = 'movie-poster';
+        poster.src = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 'https://via.placeholder.com/500x750?text=No+Image';
+        poster.alt = movie.title;
+
+        const title = document.createElement('h3');
+        title.className = 'movie-title';
+        title.textContent = movie.title;
+
+        const rating = document.createElement('p');
+        rating.className = 'movie-rating';
+        rating.textContent = `⭐ ${movie.vote_average}/10`;
+
+        const watchlistBtn = document.createElement('button');
+        watchlistBtn.className = 'watchlist-btn';
+
+        let watchlist = getWatchlist();
+        const movieInWatchlist = watchlist.some(item => item.id === movie.id);
+
+        if (movieInWatchlist) {
+            watchlistBtn.textContent = 'Remove from Watchlist';
+            watchlistBtn.style.backgroundColor = '#d32f2f';
+        } else {
+            watchlistBtn.textContent = 'Add to Watchlist';
+        }
+
+        watchlistBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            let watchlist = getWatchlist();
+            const movieIndex = watchlist.findIndex(item => item.id === movie.id);
+            
+            if (movieIndex !== -1) {
+                // Remove from watchlist
+                watchlist.splice(movieIndex, 1);
+                watchlistBtn.textContent = 'Add to Watchlist';
+                watchlistBtn.style.backgroundColor = '';
+                alert(`${movie.title} removed from your watchlist.`);
+            } else {
+                // Add to watchlist
+                watchlist.push({
+                    id: movie.id,
+                    title: movie.title,
+                    poster_path: movie.poster_path,
+                    vote_average: movie.vote_average
+                });
+                watchlistBtn.textContent = 'Remove from Watchlist';
+                watchlistBtn.style.backgroundColor = '';
+                alert(`${movie.title} added to your watchlist!`);
+            }
+            setWatchlist(watchlist);
+        });
+
+        card.appendChild(poster);
+        card.appendChild(title);
+        card.appendChild(rating);
+        card.appendChild(watchlistBtn);
+
+        movieListEl.appendChild(card);
+    });
+}
+});
+</script>
+
+</body>
+</html>

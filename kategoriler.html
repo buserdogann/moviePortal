@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoviePortal - Category</title>
+    <style>
+        * {
+            margin: 0;   
+            padding: 0;  
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        /*sayfanın gövdesi için */
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+        }
+
+        /*başlık çubuğunun ayarlarını yapıyoruz burda*/
+        header {
+            background-color: #4b006e;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); 
+        }
+   
+
+
+
+        /*MENÜ SEÇENEKLERİ İÇİN AYARLAR(anamenü,favoriler,tümfilmlerve kategoriler)*/
+        /*  nav menüsü içindekileri düzenlemek ve şekillendirmek için  */
+        /* padding= içe doğru boşluk bırakır */
+      
+        nav {
+        background-color: #1a1a1a;
+        padding: 12px 15px; 
+        }
+
+        nav ul {
+        display: flex; /*yatay bir menü oluşturuyoruz*/
+        justify-content: center;
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        gap: 10px; 
+        }
+
+        nav ul li {
+        margin: 0 10px; 
+        }
+
+         /* Menü linkleri için stil ayarları yapılıyor burda */
+        nav ul li a {
+        color: #ffffff;
+        text-decoration: none;
+        font-weight: bold;
+        padding: 8px 18px; 
+        border-radius: 15px;
+        transition: all 0.3s ease; /* Tüm özelliklere animasyon */
+        white-space: nowrap;
+        display: inline-block; 
+        position: relative; 
+        font-size: 1rem; 
+        }
+
+        /* Hover Efekti */
+        nav ul li a:hover {
+        background-color: #4b006e;
+        transform: translateY(-2px); /* Hafif yukarı kaydırma (yükselme) */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Gölge efekti */
+        }
+
+        /* Aktif Sayfa Stili */
+        nav ul li a.active {
+        background-color: #4b006e;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); 
+        }
+
+        /* Mobil Uyumluluk */
+        @media (max-width: 768px) {
+        nav ul {
+            flex-wrap: wrap; /* Küçük ekranda alt satıra kaydır */
+            gap: 8px; 
+        }
+        
+        nav ul li {
+            margin: 0 5px;
+        }
+        
+        nav ul li a {
+            padding: 6px 12px; 
+            font-size: 0.85rem; 
+        }
+        }
+
+
+          /* Kategoriler bölümü için stil ayarları burda */
+        .categories {
+            padding:20px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+         /* Kategoriler başlığı animasyonlu bir efekt için ayarlar */
+       .categories h2 {
+            font-size: 3rem;
+            margin-bottom: 30px; 
+            background: linear-gradient(90deg, #d7c2e6, #451156, #b347ff);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: gradientText 12s linear infinite; 
+        }
+
+        @keyframes gradientText {
+            to { background-position: 200% center; }
+        }
+
+
+        /* Kategori isimlerinin yazdığı resimleri kartlatın grid düzeni */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px; /* kutular arası boşluk */
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* kategori kartlarının stili için ayarlar */
+        .category-card {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+             border: 2px solid #f7f4f8; /* 2px kalınlığında çizgi */
+    
+        }
+        
+        /*(Hover Efekti)= üzerine gelince 10px yukarı kaldırmak için */
+        .category-card:hover {
+            transform: translateY(-10px);
+        }
+       /*kategori kartlarının üstünde yarı saydam bir efekt için (overlay)*/
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(65, 65, 65, 0.5);
+            z-index: 1;
+        
+        }
+        /*başlık gibi bir şey ,film türü için*/
+        .category-card h3 {
+            font-size: 1.8rem;
+            z-index: 2;
+            color: rgb(255, 255, 255);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        /* alt bilgi, kaç film oldunu yazdık*/
+        .category-card p {
+            z-index: 2;
+            color: #fef9f9;
+            margin-top: 10px;
+        }
+
+        /* footer alt bilgi) stil ayarları için */
+        footer {
+            background-color: #1a1a1a;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!--sayfamızın ismi-->
+        <h1>MoviePortal</h1>
+    </header>
+    <!--bu kısım ile tüm sayfalar arası bağlantı kurabiliyoruz-->
+     <nav>
+    <ul>
+        <li><a href="anasayfa.html">Home</a></li>
+        <li><a href="populerfilmler.html">Popular Movies</a></li>
+        <li><a href="kategoriler.html"class="active">Categories</a></li>
+        <li><a href="tumfilmler.html">All Movies</a></li>
+    </ul>
+    </nav>
+     <!-- section= tematik guruplama-->
+      <!--her bir kategori kartı için temsili bir filmin resimlerinin dosya yolunu ekledik
+      daha sonra js ile bu kartlara tıklandığında o kategorinin filmlerini listelemeyi sağlıyacağız-->
+      
+    <section class="categories">
+        <h2>Categories</h2>
+        
+        <div class="category-grid">
+            <div class="category-card" style="background: url('images/IMG_8485.JPG') center/cover;">
+                <h3>Action</h3>
+            </div>
+            
+            <div class="category-card" style="background: url('images/IMG_8495.JPG') center/cover ;">
+                <h3>Family</h3>
+            </div>
+            <div class="category-card" style="background: url('images/IMG_8484.JPG') center/cover;">
+                <h3>Fantasy</h3>
+            </div>
+            <div class="category-card" style="background: url('images/IMG_8483.JPG') center/cover;">
+                <h3>Science Fiction</h3>
+            </div>
+            <div class="category-card" style="background: url('images/IMG_8489.JPG') center/cover;">
+                <h3>Comedy</h3>
+            </div>
+            <div class="category-card" style="background: url('images/IMG_8490.JPG') center/cover;">
+                <h3>Musical</h3>
+            </div>
+            <div class="category-card" style="background: url('images/IMG_8491.JPG') center/cover;">
+                <h3>Drama</h3>
+            </div>
+            <div class="category-card" style="background: url('images/IMG_8492.JPG') center/cover;">
+                <h3>Animation</h3>
+            </div>
+            <div class="category-card" style="background: url('images/IMG_8493.JPG') center/cover ;">
+                <h3>Horror</h3>
+            </div>
+            <div class="category-card" style="background: url('images/IMG_8497.JPG') center/cover ;">
+                <h3>Superhero</h3>
+            </div>
+            
+            <div class="category-card" style="background: url('images/IMG_8482.JPG') center/cover;">
+                <h3>Romance</h3>
+            </div>
+            <div class="category-card" style="background: url('images/IMG_8496.JPG') center/cover ;">
+                <h3>War</h3>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <p> © 2025 MoviePortal. All rights reserved.</p>
+    </footer>
+    
+    <script src="kategoriler.js"></script>
+    
+</body>
+</html>

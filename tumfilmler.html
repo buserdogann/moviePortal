@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendations - All Movies</title>  <!--Sayfa Basligi-->
+    <style>
+         /* Genel stil sifirlama ve box model ayari */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif; /* Varsayislan font */
+        }
+        
+         /* Sayfa arka plani ve metin rengi */
+        body {
+            background-color: #0f0f0f;
+            color: #ffffff;
+        } 
+        
+          /* Baslik bolumu stil ayarlari */
+        header {
+            background-color: #4b006e;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Golge efekti */
+        }
+        
+       
+        /* Navigasyon cubugu */
+        nav {
+            background-color: #1a1a1a;
+            padding: 12px 15px; 
+        }
+
+        /* Navigasyon menusu */
+        nav ul {
+            display: flex;
+            justify-content: center;/* Ogeleri ortala */
+            list-style-type: none; /* Liste isaretlerini kaldirm islemi */
+            margin: 0;
+            padding: 0;
+            gap: 10px; /* Ogeler arasi bosluk */
+        }
+ 
+        nav ul li {
+            margin: 0 10px; /* Yatay bosluk */
+        }
+
+        /* Navigasyon linkleri */
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold; /* Kalin yazi */ 
+            padding: 8px 18px; /* Ic bosluk */
+            border-radius: 15px; /* Yuvarlak koseler */
+            transition: all 0.3s ease;  /* Gecis efekti */
+            white-space: nowrap; /* Metin kaymasini engelle */
+            display: inline-block; 
+            position: relative;
+            font-size: 1rem;
+        }
+
+        /* Navigasyon link hover efekti */
+        nav ul li a:hover {
+            background-color: #4b006e;
+            transform: translateY(-2px);  /* Hafif yukari kaydirma */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Golge efekti */
+        }
+
+        /* Aktif sayfa link stili */
+        nav ul li a.active {
+            background-color: #4b006e;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* Ic golge */
+            
+        }
+
+        /* Film listesi bolumu */
+        .all-movies {
+            padding: 30px 15px; /* Ic bosluk */
+            text-align: center; /* Ortalama */
+        }
+        
+         /* Baslik stili */
+        .all-movies h2 {
+            font-size: 2rem;
+            margin-bottom: 20px; /* Alt bosluk */
+             /* Gradient metin efekti */
+            background: linear-gradient(90deg, #d7c2e6, #451156, #b347ff);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: gradientText 12s linear infinite; 
+        }
+
+         /* Gradient metin animasyonu */
+        @keyframes gradientText {
+            to { background-position: 200% center; }
+        }
+        
+        /* Film kartlari grid yapisi */
+        .movie-grid {
+            display: flex;
+            flex-wrap: wrap;  /* Tasan ogeleri alt satira al */
+            justify-content: center;
+            gap: 20px;
+            width: 100%; /* Tam genislik */
+            margin-top: 30px; /* Ust bosluk */
+        }
+        
+        /* Film karti stili */
+        .movie-card {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden; /* Tasan icerigi gizle */
+            transition: transform 0.3s; /* Gecis efekti */
+            width: calc(50% - 20px); /* Genislik hesabi */
+            max-width: 300px; /* Maksimum genislik */
+            display: flex;
+            flex-direction: column;  /* Dikey siralama */
+        } 
+        
+        /* Film karti hover efekti */
+        .movie-card:hover {
+            transform: translateY(-10px); /* Yukari kaydirma */
+        }
+        
+        /* Film resmi stili */
+        .movie-card img {
+            width: 100%; /* Tam genislik */
+            height: auto; /* Oranlari koru */
+            aspect-ratio: 2/3; /* Resim orani */
+            object-fit: cover;  
+        }
+        
+        /* Film bilgi alani */
+        .movie-info {
+            padding: 15px; 
+        }
+        
+         /* Film basligi */
+        .movie-info h3 {
+            margin-bottom: 10px; /* Alt bosluk */
+            color: #b347ff; 
+            font-size: 1.1rem; 
+        }
+        
+         /* Film kategorisi */
+        .movie-category {
+            font-size: 0.8rem; /* Kucuk yazi boyutu */
+            color: #aaaaaa; 
+            margin-bottom: 10px; 
+        }
+        
+        /* Alt bilgi */
+        footer {
+            background-color: #1a1a1a; 
+            text-align: center; 
+            padding: 15px; 
+            margin-top: 30px; 
+            font-size: 0.9rem; /* Yazi boyutu */
+        }
+        
+        /* Aksiyon butonlari */
+        .action-buttons {
+            display: flex; /* Esnek kutu modeli */
+            justify-content: center; /* Ortalama */
+            gap: 8px; /* Ogeler arasi bosluk */
+            margin-top: 10px; /* Ust bosluk */
+            flex-wrap: wrap; /* Tasan butonlari alt satira al */
+        }
+        
+         
+        /* Buton stili = watch list e eklemek için kullanılıcak buton */
+        .action-buttons button {
+            padding: 5px 10px; /* Ic bosluk */
+            border: 2px solid #4b006e; /* Kenarlik */
+            border-radius: 6px; /* Yuvarlak koseler */
+            font-size: 0.8rem; /* Yazi boyutu */
+            background-color: #a44dcd; 
+            color: white; 
+            cursor: pointer; /* Imlec degisimi */
+            transition: all 0.3s; /* Gecis efekti */
+            white-space: nowrap; /* Metin kaymasini engelle */
+        }
+
+
+        /* Buton hover efekti */
+        .action-buttons button:hover {
+            background-color: #4b006e; 
+            transform: translateY(-2px); /* Hafif yukari kaydirma */
+        }
+
+
+        /* Tablet boyutu icin responsive ayarlar */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-wrap: wrap; /* Tasan ogeleri alt satira al */
+                gap: 8px; /* Ogeler arasi bosluk */
+            }
+  
+            nav ul li {
+                margin: 0 5px; /* Yatay bosluk */
+            }
+  
+            nav ul li a {
+                padding: 6px 12px; /* Daha kucuk ic bosluk */
+                font-size: 0.85rem; /* Daha kucuk yazi boyutu */
+            }
+            
+            .all-movies h2 {
+                font-size: 1.5rem; /* Daha kucuk baslik */
+                margin-bottom: 15px; /* Daha az alt bosluk */
+            }
+            
+            .movie-card {
+                width: calc(50% - 10px); /* Daha dar kartlar */
+            }
+            
+            .movie-info h3 {
+                font-size: 1rem; /* Daha kucuk baslik */
+            }
+        }
+
+       /* Mobil boyutu icin responsive ayarlar */
+        @media (max-width: 480px) {
+            .movie-card {
+                width: 100%; /* Tam genislik */
+                max-width: 250px; /* Maksimum genislik */
+            }
+            
+            .action-buttons {
+                flex-direction: column; /* Dikey siralama */
+                gap: 5px; /* Ogeler arasi bosluk */
+            }
+            
+            .action-buttons button {
+                width: 100%; /* Tam genislik */
+                padding: 6px; /* Ic bosluk */
+            }
+        }
+    </style>
+</head>
+<body>
+     <!-- Sayfa baslik bolumu -->
+    <header>
+        <h1>MoviePortal</h1>
+    </header>
+     <!-- NAVİGASYON MENÜSÜ SEÇENEKLERİ İÇİN AYARLAR(anamenü,favoriler,tümfilmlerve kategoriler)-->
+    <nav>
+        <ul>
+            <li><a href="anasayfa.html">Home</a></li>
+            <li><a href="populerfilmler.html">Popular Movies</a></li>
+            <li><a href="kategoriler.html">Categories</a></li>
+            <li><a href="tumfilmler.html" class="active">All Movies</a></li> <!-- Aktif sayfa -->
+        </ul>
+    </nav>
+
+    <!-- Film listesi bolumu -->
+    <section class="all-movies">
+        <h2>All Movies</h2>
+        
+        <!-- Film kartlari grid yapisi -->
+        <div class="movie-grid">
+             <!-- Film karti 1 -->
+            
+        </div>
+    </section>
+    
+     <!-- Sayfa alt bilgisi -->
+    <footer>
+        <p> 2025 Movie Portal. All rights reserved.</p> <!-- Telif hakki bilgisi -->
+    </footer>
+
+    <script src="tumfilmler.js"></script>
+
+</body>
+</html>
