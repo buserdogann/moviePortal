@@ -1,9 +1,354 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Benim Harika Sitem</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoviePortal - Home</title>
+    <style>
+/* GENEL STİL AYARLARI */
+*{
+    margin: 0; /* Tüm elementlerin varsayılan margin'ini sıfırla */
+    padding: 0; /* Tüm elementlerin varsayılan padding'ini sıfırla */
+    font-family: 'Arial', sans-serif; 
+    box-sizing: border-box; 
+}
+/* HEADER STİLİ */
+header{ 
+    background-color: #4b006e; 
+    padding: 20px; /* İç boşluk */
+    text-align: center; 
+    color: white; 
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Gölge efekti */
+}
+
+/* BODY STİLİ */
+body{
+    background-color: black;
+    color: white; 
+}
+
+/* NAVİGASYON MENÜSÜ */
+nav {
+  background-color: #1a1a1a; /* Koyu gri arka plan */
+  padding: 12px 15px; /* Dikey ve yatay boşluk */
+}
+
+/* MENÜ SEÇENEKLERİ İÇİN AYARLAR(anamenü,favoriler,tümfilmlerve kategoriler) */
+nav ul {
+  display: flex; /* Flexbox kullanarak yatay menü oluştur */
+  justify-content: center; /* Öğeleri yatayda ortala */
+  list-style-type: none; /* Liste işaretlerini kaldır */
+  margin: 0;
+  padding: 0;
+  gap: 10px; /* Menü öğeleri arası boşluk */
+ }
+
+/* NAV MENÜ ÖĞELERİ */
+nav ul li {
+  margin: 0 10px; /* Sol ve sağ boşluk */
+ }
+
+/* NAV MENÜ LİNKLERİ */
+nav ul li a {
+  color: #ffffff; /* Beyaz yazı rengi */
+  text-decoration: none; /* Alt çizgiyi kaldır */
+  font-weight: bold; /* Kalın yazı */
+  padding: 8px 18px; /* İç boşluk */
+  border-radius: 15px; /* Yuvarlak köşeler */
+  transition: all 0.3s ease; /* Geçiş efekti */
+  white-space: nowrap; /* Metin kaymasını engelle */
+  display: inline-block; /* Blok seviyesi öğe */
+  position: relative; /* Pozisyonlandırma için */
+  font-size: 1rem; /* Yazı boyutu */
+ }
+
+/* NAV MENÜ LİNK HOVER EFEKTİ */
+nav ul li a:hover {
+  background-color: #4b006e; 
+  transform: translateY(-2px); /* Hafif yukarı kaydır */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Gölge efekti */
+  }
+
+/* AKTİF MENÜ ÖĞESİ STİLİ */
+nav ul li a.active {
+  background-color: #4b006e; /* Mor arka plan */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3); /* İç gölge efekti */
+  }
+
+/* İZLEME LİSTESİ BÖLÜMÜ */
+.watchlist-section {
+    padding:35px 0; /* Üst ve alt boşluk */
+    position: relative; /* Pozisyonlandırma için */
+    width: 100%; /* Tam genişlik */
+    margin: 0 auto; /* Otomatik yatay ortalama */
+}
+
+/* BÖLÜM BAŞLIĞI STİLİ */
+.section-header {
+    display: flex; /* Flexbox kullan */
+    justify-content: flex-start; /* Sola hizala */
+    align-items: center; /* Dikeyde ortala */
+    margin-bottom: 20px; /* Alt boşluk */
+    padding: 0 40px; /* Yatay iç boşluk */
+    width: 100%; /* Tam genişlik */
+}
+
+/* BÖLÜM BAŞLIĞI METİN STİLİ */
+.section-title {
+    font-size: 2rem; /* Büyük yazı boyutu */
+    margin: 5px 0; /* Üst ve alt boşluk */
+    background: linear-gradient(90deg, #d7c2e6, #451156, #b347ff); /* Gradient arka plan */
+    background-size: 200% auto; /* Gradient boyutu */
+    color: transparent; /* Yazı rengini şeffaf yap */
+    -webkit-background-clip: text; /* Safari için metin kırpma */
+    background-clip: text; /* Metin üzerinde gradient */
+    animation: gradientText 12s linear infinite; /* Animasyon */
+    padding-left: 20px; /* Sol boşluk */
+    -webkit-text-fill-color: transparent; /* Safari için ek güvenlik */
+}
+
+/* FİLM KAYDIRMA KONTEYNERİ */
+.scroll-container {
+    position: relative; /* Pozisyonlandırma için */
+    width: 100%;
+    padding: 0 40px; /* Yatay iç boşluk */
+}
+
+/* FİLM KAYDIRMA ALANI */
+.movie-scroller {
+    display: flex; /* Flexbox kullan */
+    overflow-x: auto; /* Yatay kaydırma çubuğu */
+    scroll-behavior: smooth; 
+    gap: 0; /* Öğeler arası boşluk */
+    padding: 15px 0; /* Üst ve alt boşluk */
+    width: 100%; /* Tam genişlik */
+    scroll-snap-type: x mandatory; /* Kaydırma noktaları */
+    -webkit-overflow-scrolling: touch; /* iOS kaydırma performansı */
+}
+
+/* KAYDIRMA ÇUBUĞUNU GİZLE */
+.movie-scroller::-webkit-scrollbar {
+    display: none; 
+}
+
+/* FİLM KARTI STİLİ = film afişlerimizin geliceği kart bölmeleri */
+.movie-card {
+    flex: 0 0 20%; /* Genişlik ayarı (5 kart yan yana) */
+    background-color: #1a1a1a; /* Koyu gri arka plan */
+    border-radius: 8px; /* Yuvarlak köşeler */
+    overflow: hidden; /* Taşan içeriği gizle */
+    position: relative; /* Pozisyonlandırma için */
+    transition: transform 0.3s ease; /* Geçiş efekti */
+    min-width: 0; /* Minimum genişlik */
+    scroll-snap-align: start; /* Kaydırma hizalaması */
+    margin: 0 5px; /* Yatay boşluk */
+    padding: 0;
+    transform: translateY(-5px); /* Hafif yukarı kaldır */
+}
+
+/* İLK VE SON FİLM KARTI MARGİN AYARI */
+.movie-card:first-child {
+    margin-left: 0;
+}
+
+.movie-card:last-child {
+    margin-right: 0;
+}
+
+/* FİLM KARTI HOVER EFEKTİ */
+.movie-card:hover {
+    transform: translateY(-15px); /* Yukarı hareket efekti */
+}
+
+/* FİLM RESİM STİLİ */
+.movie-card img {
+    width: 100%; /* Tam genişlik */
+    height: auto; /* Oranları koru */
+    aspect-ratio: 2/3; /* Sabit en-boy oranı */
+    object-fit: cover; /* Resmi kırparak sığdır */
+    border-radius: 8px 8px 0 0; /* Üst köşeleri yuvarla */
+}
+
+/* FİLM BİLGİ ALANI */
+.movie-info {
+    padding: 12px; /* İç boşluk */
+}
+
+/* FİLM BAŞLIĞI */
+.movie-info h3 {
+    margin-bottom: 8px; /* Alt boşluk */
+    font-size: 20px; /* Yazı boyutu */
+    white-space: nowrap; /* Tek satırda göster */
+    overflow: hidden; /* Taşanı gizle */
+    text-overflow: ellipsis; /* ... ile göster */
+    color: #b347ff; /* Mor yazı rengi */
+}
+
+/* FİLM AÇIKLAMASI */
+.movie-info p {
+    font-size: 0.9rem; /* Küçük yazı boyutu */
+    color: #cccccc; /* Açık gri yazı */
+    margin-bottom: 8px; /* Alt boşluk */
+}
+
+/* FİLM BUTONU */
+.movie-info button {
+    padding: 4px; /* İç boşluk */
+    margin: 2px; /* Dış boşluk */
+    border: 2px solid #4b006e; /* Mor kenarlık */
+    border-radius: 6px; /* Yuvarlak köşeler */
+    font-size: 10px; /* Küçük yazı boyutu */
+    background-color: #a44dcd; /* Mor arka plan */
+    color: white; /* Beyaz yazı */
+    cursor: pointer; /* İmleç değişimi */
+}
+
+/* FİLM BUTONU HOVER EFEKTİ */
+.movie-info button:hover{
+    background-color: #4b006e; /* Koyu mor arka plan */
+    transform: translateY(-1px); /* Hafif yukarı hareket */
+}
+
+/* KAYDIRMA BUTONLARI= java eklendikten sonra aktifleşicek */
+.scroll-btn {
+    background-color: rgba(75, 0, 110, 0.7); /* Yarı saydam mor */
+    border: none; /* Kenarlık yok */
+    border-radius: 50%; /* Daire şekli */
+    color: white; 
+    font-size: 1.2rem; 
+    cursor: pointer; /* İmleç değişimi */
+    display: flex; /* Flexbox kullan */
+    align-items: center; /* Dikeyde ortala */
+    position: absolute; /* Mutlak pozisyon */
+    transform: translateY(-50%); /* Dikeyde ortala */
+    transition: all 0.3s; /* Geçiş efekti */
+    width: 40px; 
+    height: 40px; 
+    top: 50%; /* Üstten yarıya */
+    justify-content: center; 
+    z-index: 10; /* Üst katman */
+    padding: 0; 
+} 
+
+/* KAYDIRMA BUTONU HOVER EFEKTİ */
+.scroll-btn:hover {
+    background-color: #4b006e; 
+    transform: translateY(-50%) scale(1.1); /* Büyütme efekti */
+}
+
+/* SOL KAYDIRMA BUTONU POZİSYONU */
+.scroll-left {
+    left: 0; /* Sola yapışık olması için */
+}
+
+/* SAĞ KAYDIRMA BUTONU POZİSYONU */
+.scroll-right {
+    right: 0; /* Sağa yapışık olması için*/
+}
+
+/* FOOTER STİLİ */
+footer {
+    background-color: #1a1a1a; 
+    text-align: center; 
+    padding: 20px;
+    margin-top: 30px; 
+}
+
+/* RESPONSIVE TASARIM AYARLARI */
+
+/* 1200px ve altı için */
+@media (max-width: 1200px) {
+    .movie-card {
+        flex: 0 0 25%; /* 4 kart yan yana */
+    }
+}
+
+/* 900px ve altı için */
+@media (max-width: 900px) {
+    .movie-card {
+        flex: 0 0 33.33%; /* 3 kart yan yana */
+    }
+}
+
+/* 600px ve altı için */
+@media (max-width: 600px) {
+    .movie-card {
+        flex: 0 0 50%; /* 2 kart yan yana */
+    }
+    .scroll-container {
+        padding: 0 30px; /* Yatay boşluğu azalt */
+    }
+}
+
+/* 400px ve altı için */
+@media (max-width: 400px) {
+    .movie-card {
+        flex: 0 0 80%; /* 1 kart (geniş) */
+    }
+    .scroll-container {
+        padding: 0 20px; /* Yatay boşluğu daha da azalt */
+    }
+    nav ul {
+        flex-wrap: wrap; /* Menü öğelerini alt alta sırala */
+        gap: 8px; /* Aralıkları azalt */
+    }
+    nav ul li {
+        margin: 0 5px; /* Kenar boşluklarını azalt */
+    }
+    nav ul li a {
+        padding: 6px 12px; /* İç boşluğu azalt */
+        font-size: 0.85rem; /* Yazı boyutunu küçült */
+    }
+}
+    </style>
 </head>
 <body>
-    <h1>Hoşgeldin Buse! Bu benim açılış sayfam 🥳</h1>
+
+    <!-- SİTE BAŞLIĞI -->
+    <header>
+        <h1>MoviePortal</h1>
+    </header>
+
+    <!-- NAVİGASYON MENÜSÜ SEÇENEKLERİ İÇİN AYARLAR(anamenü,favoriler,tümfilmlerve kategoriler) -->
+    <nav>
+        <ul>
+            <li><a href="anasayfa.html" class="active">Home</a></li>
+            <li><a href="populerfilmler.html">Popular Movies</a></li>
+            <li><a href="kategoriler.html">Categories</a></li>
+            <li><a href="tumfilmler.html">All Movies</a></li>
+        </ul>
+    </nav>
+
+    <!-- İZLEME LİSTESİ BÖLÜMÜ = temsili film afişlerinin resimlerinin dosya yolları eklenmiştir-->
+    <section class="watchlist-section">
+
+        <!-- BÖLÜM BAŞLIĞI -->
+        <div class="section-header">
+            <h2 class="section-title">My Watchlist</h2>
+        </div>
+        
+        <!-- FİLM KAYDIRMA ALANI -->
+        <div class="scroll-container">
+            <!-- SOL KAYDIRMA BUTONU -->
+            <button class="scroll-btn scroll-left" onclick="scrollMovies('watchlist-scroller', -1)">❮</button>
+            
+            <!-- FİLM LİSTESİ -->
+            <div class="movie-scroller" id="watchlist-scroller">
+               
+            </div>
+            
+            <!-- SAĞ KAYDIRMA BUTONU -->
+            <button class="scroll-btn scroll-right" onclick="scrollMovies('watchlist-scroller', 1)">❯</button>
+        </div>
+    </section>
+
+    <!-- FOOTER (ALT BİLGİ) -->
+    <footer>
+        <p>&copy; 2025 MoviePortal. All rights reserved.</p>
+    </footer>
+
+    <script src="anasayfa.js"></script>
+
+    
 </body>
 </html>
